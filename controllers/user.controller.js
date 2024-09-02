@@ -1,7 +1,7 @@
 import express from "express";
 import "dotenv/config"
 import http from "http";
-import { getEthPriceService, getNormalTransService } from "../services/user.service.js";
+import { addNormalTransService, updateEthPriceService } from "../services/user.service.js";
 
 /**
   * @param {express.Request} req;
@@ -16,7 +16,7 @@ export async function healthCheck(req, res) {
   * @param {express.Request} req 
   * @param {express.Response} res 
   * **/
-export async function getNormalTransController(req, res) {
+export async function addNormalTransController(req, res) {
 
   /**
     * @type {import("../schema/trans.schema").Response} 
@@ -46,13 +46,16 @@ export async function getNormalTransController(req, res) {
       }
     }
 
-    const address = "0xce94e5621a5f7068253c42558c147480f38b5e0d"
+    /**
+      * @type {import("../schema/trans.schema").RequestDto}
+      * */
+    const body = req.body;
 
     const response = await fetch(
       "https://api.etherscan.io/api" +
       "?module=account" +
       "&action=txlist" +
-      `&address=${address}` +
+      `&address=${body.address}` +
       "&startblock=0" +
       "&endblock=99999999" +
       "&page=1" +
@@ -72,9 +75,14 @@ export async function getNormalTransController(req, res) {
       return;
     }
 
-    getNormalTransService(data.result, address)
+    addNormalTransService(data.result, body.address)
 
-    res.send("ok")
+    resp.status = 201;
+    resp.message = http.STATUS_CODES[resp.status];
+    resp.details = "Transaction added!";
+
+    res.status(resp.status).json(resp);
+    return;
 
   } catch (error) {
     resp.status = 500;
@@ -82,21 +90,29 @@ export async function getNormalTransController(req, res) {
     resp.details = error;
 
     res.status(resp.status).json(resp);
+    return;
   }
 
 }
 
-export async function getEthPriceController() {
+export async function updateEthPriceController() {
 
-  const options = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    }
-  };
+  try {
 
-  const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=inr", options);
+    const address = "0xce94e5621a5f7068253c42558c147480f38b5e0d"
 
-  getEthPriceService(await res.json());
+    const options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    };
 
+    const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=inr", options);
+
+    updateEthPriceService(await res.json(), address);
+
+  } catch (error) {
+    console.log(error)
+  }
 }

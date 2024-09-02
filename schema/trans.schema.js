@@ -126,8 +126,14 @@ const userSchema = new mongoose.Schema({
 export const UserModel = mongoose.model('Transaction', userSchema, 'transactions');
 
 /**
-  * @typedef {Object} Response
-  * @property {Number} status - The status of Response.
-  * @property {String} message
-  * @property {String} details
-  * */
+* @typedef {Object} Response
+* @property {Number} status - The status of Response.
+* @property {String} message
+* @property {String} details
+* */
+
+
+/**
+* @typedef {Object} RequestDto
+* @property {String} address
+* */

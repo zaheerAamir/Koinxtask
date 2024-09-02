@@ -4,7 +4,7 @@ import { UserModel } from "../schema/trans.schema.js";
 /**
   * @param {import("../schema/trans.schema").User} user 
   * */
-export async function getNormalTransRepo(user) {
+export async function addNormalTransRepo(user) {
 
   try {
 
@@ -19,8 +19,20 @@ export async function getNormalTransRepo(user) {
 
 /**
   * @param {Number} price 
+  * @param {String} address 
   * */
-export async function getEthPriceRepo(price) {
+export async function updateEthPriceRepo(price, address) {
 
-  console.log(price);
+  try {
+    const res = await UserModel.updateOne(
+      { address: address },
+      { $set: { ethPrice: price } }
+    )
+
+    console.log(res)
+
+  } catch (error) {
+    throw new Error(error)
+  }
+
 }

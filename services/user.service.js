@@ -1,10 +1,10 @@
-import { getEthPriceRepo, getNormalTransRepo } from "../repositories/user.repo.js";
+import { addNormalTransRepo, updateEthPriceRepo } from "../repositories/user.repo.js";
 
 /**
   * @param {Array} body 
   * @param {String} address 
   **/
-export async function getNormalTransService(body, address) {
+export async function addNormalTransService(body, address) {
 
   try {
     /**
@@ -46,11 +46,7 @@ export async function getNormalTransService(body, address) {
       transactions: transactions
     };
 
-    console.log(user)
-
-
-    getNormalTransRepo(user);
-
+    addNormalTransRepo(user);
 
   } catch (error) {
     throw new Error(error);
@@ -60,10 +56,17 @@ export async function getNormalTransService(body, address) {
 
 /**
   * @param {Object} body 
+  * @param {String} address 
   * */
-export async function getEthPriceService(body) {
+export async function updateEthPriceService(body, address) {
 
 
-  getEthPriceRepo(body.ethereum.inr);
+
+  try {
+    updateEthPriceRepo(body.ethereum.inr, address);
+
+  } catch (error) {
+    throw new Error(error)
+  }
 
 }
