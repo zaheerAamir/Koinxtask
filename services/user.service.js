@@ -1,4 +1,4 @@
-import { addNormalTransRepo, updateEthPriceRepo } from "../repositories/user.repo.js";
+import { addNormalTransRepo, getTotalExpenseRepo, updateEthPriceRepo } from "../repositories/user.repo.js";
 
 /**
   * @param {Array} body 
@@ -60,13 +60,49 @@ export async function addNormalTransService(body, address) {
   * */
 export async function updateEthPriceService(body, address) {
 
-
-
   try {
     updateEthPriceRepo(body.ethereum.inr, address);
 
   } catch (error) {
     throw new Error(error)
+  }
+
+}
+
+/**
+  * @param {String} address 
+  * */
+export async function getTotalExpenseService(address) {
+
+  try {
+
+    const user = await getTotalExpenseRepo(address);
+
+    /**
+      * @type {import("../schema/trans.schema").TotalExpense[]}
+      * */
+    const totalExpenses = [];
+
+    user.transactions.forEach(transaction => {
+
+      /**
+        * @type {import("../schema/trans.schema").TotalExpense}
+        * */
+      const totalExpense = {
+        transactionIndex: transaction.transactionIndex,
+        totalExpense: (transaction.gasUsed * transaction.gasPrice) / 1e18
+      };
+
+      totalExpenses.push(totalExpense);
+    })
+
+    const ethPrice = user.ethPrice;
+
+    return { totalExpenses, ethPrice };
+
+
+  } catch (error) {
+    throw new Error(error);
   }
 
 }

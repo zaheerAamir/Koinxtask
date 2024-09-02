@@ -36,3 +36,24 @@ export async function updateEthPriceRepo(price, address) {
   }
 
 }
+
+/**
+  * @param {String} address 
+  * */
+export async function getTotalExpenseRepo(address) {
+
+  try {
+    /**
+      * @type {import("../schema/trans.schema.js").User}
+      * */
+    const res = await UserModel.findOne(
+      { address: address },
+    )
+
+    return res;
+
+  } catch (error) {
+    throw new Error(error)
+  }
+
+}

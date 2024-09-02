@@ -137,3 +137,9 @@ export const UserModel = mongoose.model('Transaction', userSchema, 'transactions
 * @typedef {Object} RequestDto
 * @property {String} address
 * */
+
+/**
+  * @typedef {Object} TotalExpense - Total expense of user.
+  * @property {Number} transactionIndex
+  * @property {Number} totalExpense
+  * */

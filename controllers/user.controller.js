@@ -1,7 +1,7 @@
 import express from "express";
 import "dotenv/config"
 import http from "http";
-import { addNormalTransService, updateEthPriceService } from "../services/user.service.js";
+import { addNormalTransService, getTotalExpenseService, updateEthPriceService } from "../services/user.service.js";
 
 /**
   * @param {express.Request} req;
@@ -114,5 +114,38 @@ export async function updateEthPriceController() {
 
   } catch (error) {
     console.log(error)
+  }
+}
+
+/**
+  * @param {express.Request} req 
+  * @param {express.Response} res 
+  * */
+export async function getTotalExpenseContoller(req, res) {
+
+  /**
+    * @type {import("../schema/trans.schema").Response}
+    * */
+  const resp = {};
+
+  try {
+
+    const address = req.params.address;
+
+    const data = await getTotalExpenseService(address);
+    resp.status = 200;
+    resp.message = http.STATUS_CODES[resp.status];
+    resp.details = "ok";
+
+    res.status(resp.status).json({ resp, data })
+
+  }
+  catch (error) {
+    resp.status = 500;
+    resp.message = http.STATUS_CODES[resp.status];
+    resp.details = error;
+
+    res.status(resp.status).json(resp);
+    return;
   }
 }
