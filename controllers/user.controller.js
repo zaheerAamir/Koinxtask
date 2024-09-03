@@ -109,6 +109,7 @@ export async function updateEthPriceController() {
     };
 
     const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=inr", options);
+    console.log(res)
     const data = await res.json();
 
     updateEthPriceService(data, address);
