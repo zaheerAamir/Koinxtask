@@ -3,9 +3,10 @@ import routes from "./src/routes.js";
 import connectDB from "./utils/connectDb.js";
 import cron from "cron";
 import { updateEthPriceController } from "./controllers/user.controller.js";
+import "dotenv/config.js"
 
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 app.use(express.json());
 
 app.listen(PORT, () => {
